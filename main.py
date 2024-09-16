@@ -44,7 +44,7 @@ def get_assistant_response(user_input, messages):
 def main():
     st.set_page_config(page_title="Educational Chatbot", page_icon=":speech_balloon:", layout="wide")
 
-    # Include responsive CSS
+    # Responsive CSS
     st.markdown("""
     <style>
         /* Chat message bubbles */
@@ -64,16 +64,25 @@ def main():
             text-align: left;
         }
 
-        /* Remove extra spacing between messages */
-        .message-bubble {
-            margin-bottom: 5px;
-        }
-
-        /* Responsive styling */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .message-bubble {
-                max-width: 90%;
+                max-width: 90%; /* Adjust max width for mobile devices */
+                font-size: 16px; /* Slightly larger text for readability */
             }
+        }
+
+        /* Further adjustments for smaller screens */
+        @media (max-width: 480px) {
+            .message-bubble {
+                font-size: 14px; /* Slightly smaller text for smaller screens */
+            }
+        }
+
+        /* Adjust padding and margins for smaller screens */
+        body {
+            padding: 0;
+            margin: 0;
         }
 
     </style>
