@@ -44,32 +44,66 @@ def get_assistant_response(user_input, messages):
 def main():
     st.set_page_config(page_title="Educational Chatbot", page_icon=":speech_balloon:", layout="wide")
 
+    # Include responsive CSS
+    st.markdown("""
+    <style>
+        /* Chat message bubbles */
+        .message-bubble {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        .user {
+            background-color: #d1e7dd;
+            text-align: right;
+        }
+        .assistant {
+            background-color: #f8d7da;
+            text-align: left;
+        }
+
+        /* Remove extra spacing between messages */
+        .message-bubble {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 90%;
+            }
+        }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.title("Educational Chatbot")
+
     # Initialize session state for storing conversation history
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
-    # Display chat messages from history on app rerun
+    # Display chat messages from history
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        if message["role"] == "user":
+            st.markdown(f'<div class="message-bubble user">{message["content"]}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="message-bubble assistant">{message["content"]}</div>', unsafe_allow_html=True)
 
     # React to user input
     if user_input := st.chat_input("Write your message"):
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(user_input)
-
-        # Add user message to chat history
+        # Add user message to session state and display it
         st.session_state.messages.append({"role": "user", "content": user_input})
+        st.markdown(f'<div class="message-bubble user">{user_input}</div>', unsafe_allow_html=True)
 
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            response = get_assistant_response(user_input, st.session_state.messages)
-            message_placeholder.markdown(response)
-
-        # Add assistant response to chat history
+        # Generate assistant's response
+        response = get_assistant_response(user_input, st.session_state.messages)
         st.session_state.messages.append({"role": "assistant", "content": response})
+
+        # Display assistant's response
+        st.markdown(f'<div class="message-bubble assistant">{response}</div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
