@@ -44,9 +44,14 @@ def get_assistant_response(user_input, messages):
 def main():
     st.set_page_config(page_title="Educational Chatbot", page_icon=":speech_balloon:", layout="wide")
 
-    # Responsive CSS
+    # Custom CSS for removing Streamlit branding and responsive design
     st.markdown("""
     <style>
+        /* Hide Streamlit branding and footer */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+
         /* Chat message bubbles */
         .message-bubble {
             display: inline-block;
