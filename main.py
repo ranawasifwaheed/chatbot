@@ -15,11 +15,10 @@ client = OpenAI(api_key=api_key)
 
 # Define system prompt to guide the assistant
 system_prompt = (
-    "You are an educational assistant. Provide informative and accurate responses to questions "
-    "about various subjects such as science, history, math, literature, and more. If you don't "
-    "know the answer, politely suggest the user search for more information."
+    "You are a helpful and engaging assistant. Provide clear, friendly, and informative responses to a wide range "
+    "of questions. Your goal is to assist users with their inquiries, whether they are about general knowledge, "
+    "specific topics, or practical advice. If you don't have an answer, kindly suggest that they look for additional information."
 )
-
 
 def get_assistant_response(user_input, messages):
     """
@@ -38,13 +37,13 @@ def get_assistant_response(user_input, messages):
         return response_message
 
     except Exception as e:
-        return f"Exception occurred: {e}"
+        return f"Oops! Something went wrong: {e}"
 
 
 def main():
-    st.set_page_config(page_title="Educational Chatbot", page_icon=":speech_balloon:", layout="wide")
+    st.set_page_config(page_title="Knowledgeable Chatbot", page_icon=":speech_balloon:", layout="wide")
 
-    # Custom CSS for removing Streamlit branding and responsive design
+    # Custom CSS for hiding Streamlit branding and improving responsiveness
     st.markdown("""
     <style>
         /* Hide Streamlit branding and footer */
@@ -52,48 +51,155 @@ def main():
         footer {visibility: hidden;}
         header {visibility: hidden;}
 
+        /* Remove any default margin or padding */
+        .stApp {
+            margin: 0;
+            padding: 0;
+        }
+
         /* Chat message bubbles */
         .message-bubble {
             display: inline-block;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 10px;
-            max-width: 80%;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 8px;
+            max-width: 85%;
+            word-wrap: break-word;
         }
         .user {
-            background-color: #d1e7dd;
+            background-color: #d4edda; /* Light green */
             text-align: right;
+            margin-left: auto;
         }
         .assistant {
-            background-color: #f8d7da;
+            background-color: #fff3cd; /* Light yellow */
             text-align: left;
+            margin-right: auto;
         }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments for chat bubbles */
         @media (max-width: 768px) {
             .message-bubble {
-                max-width: 90%; /* Adjust max width for mobile devices */
-                font-size: 16px; /* Slightly larger text for readability */
+                max-width: 90%;
+                font-size: 14px;
             }
         }
 
-        /* Further adjustments for smaller screens */
         @media (max-width: 480px) {
             .message-bubble {
-                font-size: 14px; /* Slightly smaller text for smaller screens */
+                font-size: 12px;
+                padding: 6px;
             }
         }
 
-        /* Adjust padding and margins for smaller screens */
-        body {
-            padding: 0;
-            margin: 0;
+        @media (max-width: 375px) {
+            .message-bubble {
+                font-size: 11px;
+                padding: 4px;
+            }
         }
 
+        @media (max-width: 320px) {
+            .message-bubble {
+                font-size: 10px;
+                padding: 3px;
+            }
+        }
+
+        /* Ensure minimal space above chat messages */
+        .stTitle {
+            margin-top: 0;
+        }
+
+        /* Custom CSS for chat input box */
+        .stChatInput {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+        }
+
+        /* Custom CSS for the input field */
+        .stChatInput textarea {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: none;
+            overflow: hidden;
+            max-height: 100px; /* Limit height */
+        }
+
+        /* Custom CSS for the send button */
+        .stChatInput button {
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-left: 8px;
+            min-width: 80px;
+        }
+        .stChatInput button:focus {
+            outline: none;
+        }
+
+        /* Ensure responsive behavior of input and button */
+        @media (max-width: 768px) {
+            .stChatInput textarea {
+                font-size: 13px;
+            }
+            .stChatInput button {
+                font-size: 13px;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stChatInput textarea {
+                font-size: 12px;
+            }
+            .stChatInput button {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .stChatInput textarea {
+                font-size: 11px;
+            }
+            .stChatInput button {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .stChatInput textarea {
+                font-size: 10px;
+            }
+            .stChatInput button {
+                font-size: 10px;
+                padding: 2px 4px;
+            }
+        }
     </style>
     """, unsafe_allow_html=True)
 
-    st.title("Educational Chatbot")
+    st.title("Knowledgeable Chatbot")
 
     # Initialize session state for storing conversation history
     if 'messages' not in st.session_state:
